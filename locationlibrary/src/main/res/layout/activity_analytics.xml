@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context="com.toolyt.location.activity.AnalyticsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="20dp"
+        android:text="User Activity"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/text_still"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Still: 0:0"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/text_walking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Walking: 0:0"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/text_driving"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Driving: 0:0"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_ideal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="IDEAL" />
+</LinearLayout>

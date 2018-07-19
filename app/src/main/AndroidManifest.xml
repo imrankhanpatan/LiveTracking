@@ -17,11 +17,7 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.example.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,22 +25,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".service.MyLocationService"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false" />
-
-        <activity
-            android:name=".activity.LiveMapsActivity"
-            android:label="@string/title_activity_live_maps" />
-
-        <service
-            android:name=".service.DetectedActivitiesIntentService"
-            android:exported="false" />
-
-        <activity android:name=".activity.AnalyticsActivity" />
-        <activity android:name=".activity.IdealActivity"></activity>
     </application>
 
 </manifest>
