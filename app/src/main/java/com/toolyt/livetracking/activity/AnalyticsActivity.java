@@ -68,8 +68,8 @@ public class AnalyticsActivity extends AppCompatActivity {
         setIdealActivities();
         setWalkingActivities();
 
-        getIdealDetails();
-        getWalkingDetails();
+        /*getIdealDetails();
+        getWalkingDetails();*/
 
         btnIdeal.setOnClickListener(new View.OnClickListener() {
             @Override
