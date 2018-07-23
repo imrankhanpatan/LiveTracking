@@ -1,6 +1,5 @@
 package com.toolyt.location.Utils;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -25,10 +24,7 @@ public class MapsTask extends AsyncTask<Void, Void, String> {
 
     public MapsTask(Context context) {
         this.context = context;
-        locationDatabase = Room.databaseBuilder(context,
-                LocationDatabase.class, Constants.DATABASE_NAME)
-                .fallbackToDestructiveMigration().allowMainThreadQueries()
-                .build();
+
         currentLocation = new Location("");
         nextLocation = new Location("");
         latLngs = new ArrayList<>();
@@ -39,7 +35,7 @@ public class MapsTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... voids) {
         distance = 0.0;
         latLngs.clear();
-        locationDataArrayList.addAll(locationDatabase.daoLocation().loadFilteredLocations());
+        //locationDataArrayList.addAll(locationDatabase.daoLocation().loadFilteredLocations());
 
         for (int i = 0; i < locationDataArrayList.size(); i++) {
             latLng = new LatLng(Double.valueOf(locationDataArrayList.get(i).getLatitude()),

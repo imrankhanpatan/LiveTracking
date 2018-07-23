@@ -24,20 +24,11 @@
         <activity android:name=".activity.HomeActivity"></activity>
 
         <service
-            android:name="com.toolyt.location.service.MyLocationService"
+            android:name="com.toolyt.location.service.ToolytLocationService"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
 
-        <activity
-            android:name="com.toolyt.location.activity.LiveMapsActivity"
-            android:label="@string/title_activity_live_maps" />
-
-        <service
-            android:name="com.toolyt.location.service.DetectedActivitiesIntentService"
-            android:exported="false" />
-
-        <activity android:name="com.toolyt.location.activity.AnalyticsActivity" />
         <activity android:name="com.toolyt.location.activity.IdealActivity"></activity>
 
     </application>

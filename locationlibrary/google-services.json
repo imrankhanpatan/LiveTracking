@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "328703937519",
+    "firebase_url": "https://livetracking-207711.firebaseio.com",
+    "project_id": "livetracking-207711",
+    "storage_bucket": "livetracking-207711.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328703937519:android:3ab28cbcfa8658bc",
+        "android_client_info": {
+          "package_name": "com.toolyt.location"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328703937519-tu7psqo03d3hsm1uju1uh9albnugg116.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB-I7-y8Uqt727XvAJrYeGYwQMGJRGwbQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

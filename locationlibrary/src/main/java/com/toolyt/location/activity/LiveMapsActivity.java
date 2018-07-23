@@ -1,6 +1,5 @@
 package com.toolyt.location.activity;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
@@ -13,11 +12,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.toolyt.location.R;
-import com.toolyt.location.Utils.Constants;
-import com.toolyt.location.Utils.Utils;
-import com.toolyt.location.database.LocationDatabase;
-import com.toolyt.location.model.FilteredLocationData;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +23,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.toolyt.location.R;
+import com.toolyt.location.Utils.Utils;
+import com.toolyt.location.database.LocationDatabase;
+import com.toolyt.location.model.FilteredLocationData;
 
 import java.util.ArrayList;
 
@@ -39,16 +37,7 @@ public class LiveMapsActivity extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private GoogleMap gMap;
     private Polyline line;
-    /* private LocationDatabase locationDatabase;
-     private ArrayList<LatLng> latLngs;
-     private ArrayList<LatLng> stayedLatLngs;
-     private ArrayList<FilteredLocationData> locationDataArrayList;
-     private ArrayList<StayedLocation> stayedLocations;
-     private LatLng latLng;*/
     MarkerOptions markerOptions = new MarkerOptions();
-    //private Location currentLocation;
-    // private Location nextLocation;
-    // private double distance = 0.0;
     private TextView distanceText;
     private Button btnRefresh;
     private ProgressBar progressBar;
@@ -76,19 +65,6 @@ public class LiveMapsActivity extends FragmentActivity implements OnMapReadyCall
         startTask();
         progressBar.setVisibility(View.VISIBLE);
 
-        /*locationDatabase = Room.databaseBuilder(getApplicationContext(),
-                LocationDatabase.class, Constants.DATABASE_NAME)
-                .fallbackToDestructiveMigration().allowMainThreadQueries()
-                .build();*/
-
-        /*latLngs = new ArrayList<>();
-        stayedLatLngs = new ArrayList<>();
-        locationDataArrayList = new ArrayList<>();
-        stayedLocations = new ArrayList<>();
-        currentLocation = new Location("");
-        nextLocation = new Location("");*/
-        // updateMap();
-
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,55 +78,6 @@ public class LiveMapsActivity extends FragmentActivity implements OnMapReadyCall
         new MapsTask(LiveMapsActivity.this).execute();
     }
 
-    /*private void updateMap() {
-        try {
-            distance = 0.0;
-            locationDataArrayList.clear();
-            latLngs.clear();
-            locationDataArrayList.addAll(locationDatabase.daoLocation().loadFilteredLocations());
-
-            for (int i = 0; i < locationDataArrayList.size(); i++) {
-                latLng = new LatLng(Double.valueOf(locationDataArrayList.get(i).getLatitude()),
-                        Double.valueOf(locationDataArrayList.get(i).getLongitude()));
-                latLngs.add(latLng);
-
-
-                currentLocation.setLatitude(Double.valueOf(locationDataArrayList.get(i).getLatitude()));
-                currentLocation.setLongitude(Double.valueOf(locationDataArrayList.get(i).getLongitude()));
-                Log.d("LIST_LOCATION", i + "   " + Utils.getLocalAddress(this, currentLocation.getLatitude(),
-                        currentLocation.getLongitude()));
-                if (i < locationDataArrayList.size() - 1) {
-                    nextLocation.setLatitude(Double.valueOf(locationDataArrayList.get(i + 1).getLatitude()));
-                    nextLocation.setLongitude(Double.valueOf(locationDataArrayList.get(i + 1).getLongitude()));
-                }
-                //getDirectionResponse(currentLocation,nextLocation);
-                Log.d("MY_Distance", "" + distance);
-                distance = distance + currentLocation.distanceTo(nextLocation);
-            }
-
-            if (locationDataArrayList.size() > 1) {
-                distanceText.setText("Distance: " + Utils.getDistanceInKMS(distance));
-            }
-
-            if (mMap != null) {
-                drawPolyline(latLngs);
-            }
-
-
-            stayedLocations.clear();
-            stayedLocations.addAll(locationDatabase.daoLocation().loadStayedLocations());
-
-            for (int j = 0; j < stayedLocations.size(); j++) {
-                addStayedMarker(new LatLng(Double.valueOf(stayedLocations.get(j).getLatitude()),
-                        Double.valueOf(stayedLocations.get(j).getLongitude())));
-            }
-
-        } catch (Exception e) {
-
-        }
-
-    }
-*/
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -235,10 +162,7 @@ public class LiveMapsActivity extends FragmentActivity implements OnMapReadyCall
 
         public MapsTask(Context context) {
             this.context = context;
-            locationDatabase = Room.databaseBuilder(context,
-                    LocationDatabase.class, Constants.DATABASE_NAME)
-                    .fallbackToDestructiveMigration().allowMainThreadQueries()
-                    .build();
+
             currentLocation = new Location("");
             nextLocation = new Location("");
             latLngs = new ArrayList<>();
@@ -249,7 +173,7 @@ public class LiveMapsActivity extends FragmentActivity implements OnMapReadyCall
         protected ArrayList<LatLng> doInBackground(Void... voids) {
             distance = 0.0;
             latLngs.clear();
-            locationDataArrayList.addAll(locationDatabase.daoLocation().loadFilteredLocations());
+          //  locationDataArrayList.addAll(locationDatabase.daoLocation().loadFilteredLocations());
 
             for (int i = 0; i < locationDataArrayList.size(); i++) {
                 latLng = new LatLng(Double.valueOf(locationDataArrayList.get(i).getLatitude()),

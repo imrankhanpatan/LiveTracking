@@ -1,26 +1,28 @@
 package com.toolyt.location.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-@Entity(tableName = "RunningMode")
-public class RunningMode {
+@IgnoreExtraProperties
+public class TLocation {
 
-    @NonNull
-    @PrimaryKey
     private String time;
     private String latitude;
     private String longitude;
-    private String state;
+    private String accuracy;
+
+    public TLocation(String time, String latitude, String longitude, String accuracy) {
+        this.time = time;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
+    }
 
 
-    @NonNull
     public String getTime() {
         return time;
     }
 
-    public void setTime(@NonNull String time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -40,11 +42,11 @@ public class RunningMode {
         this.longitude = longitude;
     }
 
-    public String getState() {
-        return state;
+    public String getAccuracy() {
+        return accuracy;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setAccuracy(String accuracy) {
+        this.accuracy = accuracy;
     }
 }

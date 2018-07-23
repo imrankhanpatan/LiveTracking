@@ -24,7 +24,7 @@ import com.toolyt.location.Utils.Constants;
 import com.toolyt.location.adapter.MyAdapter;
 import com.toolyt.location.database.LocationData;
 import com.toolyt.location.database.LocationDatabase;
-import com.toolyt.location.service.MyLocationService;
+import com.toolyt.location.service.ToolytLocationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,10 +88,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             //to receive event from our service
             locationReceiver = new MyLocationReceiver();
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(MyLocationService.LOCATION_ACTION);
+            intentFilter.addAction(ToolytLocationService.LOCATION_ACTION);
             registerReceiver(locationReceiver, intentFilter);
 
-            Intent intent = new Intent(HomeActivity.this, MyLocationService.class);
+            Intent intent = new Intent(HomeActivity.this, ToolytLocationService.class);
             intent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
             startService(intent);
 
@@ -139,7 +139,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (v.getId() == R.id.btn_analytics) {
-            //startActivity(new Intent(HomeActivity.this, AnalyticsActivity.class));
+
             startActivity(new Intent(HomeActivity.this,IdealActivity.class));
         }
 

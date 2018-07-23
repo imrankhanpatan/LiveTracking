@@ -6,16 +6,12 @@ import android.arch.persistence.room.DatabaseConfiguration;
 import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.RoomDatabase;
 
-import com.toolyt.location.model.DrivingMode;
 import com.toolyt.location.model.FilteredLocationData;
-import com.toolyt.location.model.IdealMode;
-import com.toolyt.location.model.RunningMode;
 import com.toolyt.location.model.StayedLocation;
 import com.toolyt.location.model.UserActivity;
-import com.toolyt.location.model.WalkingMode;
 
 @Database(entities = {LocationData.class, FilteredLocationData.class, UserActivity.class
-        , DrivingMode.class, WalkingMode.class, RunningMode.class, IdealMode.class, StayedLocation.class}, version = 1, exportSchema = false)
+        ,StayedLocation.class}, version = 1, exportSchema = false)
 public abstract class LocationDatabase extends RoomDatabase {
 
     public abstract LocationDao daoLocation();

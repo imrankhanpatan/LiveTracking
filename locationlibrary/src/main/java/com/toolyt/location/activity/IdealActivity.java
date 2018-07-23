@@ -27,7 +27,7 @@ public class IdealActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ideal);
-        /*rvIdealList = findViewById(R.id.rv_ideal);
+        rvIdealList = findViewById(R.id.rv_ideal);
 
         layoutManager = new LinearLayoutManager(this);
         rvIdealList.setLayoutManager(layoutManager);
@@ -39,7 +39,7 @@ public class IdealActivity extends AppCompatActivity {
                 LocationDatabase.class, Constants.DATABASE_NAME)
                 .fallbackToDestructiveMigration().allowMainThreadQueries()
                 .build();
-        getIdealDetails();*/
+        getIdealDetails();
     }
 
     private void getIdealDetails() {
