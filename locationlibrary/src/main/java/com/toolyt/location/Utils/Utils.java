@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.provider.Settings;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.google.firebase.database.FirebaseDatabase;
@@ -96,18 +97,26 @@ public class Utils {
 
     public static String getSpentTime(Date startTime, Date endTime) {
         try {
-            long mills = endTime.getTime() - startTime.getTime();
-            int hours = (int) (mills / (1000 * 60 * 60));
+            long millis = endTime.getTime() - startTime.getTime();
+
+            /*int hours = (int) (mills / (1000 * 60 * 60));
             int mins = (int) ((mills / (1000 * 60)) % 60);
             Log.d("SPENT TIME: ", "" + hours + ":" + mins);
-            return hours + "h:" + mins + "m";
-
+            return hours + "h:" + mins + "m";*/
+            String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+            System.out.println(hms);
+            return hms;
         } catch (Exception e) {
 
         }
         return null;
     }
 
+    public static String convertDate(String dateInMilliseconds, String dateFormat) {
+        return DateFormat.format(dateFormat, Long.parseLong(dateInMilliseconds)).toString();
+    }
 
     public static String getLocalAddress(Context context, Double latitude, Double longitude) {
         try {
@@ -117,22 +126,20 @@ public class Utils {
             String address = null;
             String knownName = null;
 
-            try {
-                addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                knownName = addresses.get(0).getFeatureName();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            knownName = addresses.get(0).getFeatureName();
             if (knownName.equals("") || knownName == null) {
-                return address;
+                return address + ", " + city + ", " + state + ", " + country + ", " + postalCode;
             } else {
-                return knownName;
+                return knownName + ", " + address + ", " + city + ", " + state + ", " + country + ", " + postalCode;
             }
+
         } catch (Exception e) {
 
         }

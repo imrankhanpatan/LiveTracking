@@ -5,32 +5,23 @@ import android.app.Activity;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.provider.Settings;
-import android.support.v4.BuildConfig;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.toolyt.location.database.LocationDatabase;
-import com.toolyt.location.model.TLocation;
-import com.toolyt.location.service.ToolytLocationService;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.toolyt.location.database.LocationDatabase;
+import com.toolyt.location.model.TrackedLocation;
+import com.toolyt.location.service.ToolytLocationService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.toolyt.location.Utils.Constants.DATABASE_NAME;
 
@@ -40,7 +31,10 @@ public class ToolytLocation extends Application {
     private LocationDatabase locationDatabase;
     private boolean isUpdateStarted = false;
     private ToolytLocationService locationService;
-
+    private String _color = "";
+    private String _companyId;
+    private String _userId;
+    private String _userName;
 
     public ToolytLocation(Context context) {
         try {
@@ -67,8 +61,11 @@ public class ToolytLocation extends Application {
 
     }
 
+    private Activity activity;
+
     public void startLocationUpdates(final Activity activity) {
         try {
+            this.activity = activity;
             Dexter.withActivity(activity)
                     .withPermissions(
                             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -79,7 +76,8 @@ public class ToolytLocation extends Application {
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
-                                locationService.startLocationService(activity);
+                                locationService.startLocationService(activity,
+                                        _userId, _userName, _companyId, _color);
                             }
 
 
@@ -127,8 +125,8 @@ public class ToolytLocation extends Application {
     }
 
 
-    public ArrayList<TLocation> getLocationTracker(Context context) {
-        final ArrayList<TLocation> toolytLocations = new ArrayList<>();
+    public ArrayList<TrackedLocation> getLocationTracker(Context context) {
+        final ArrayList<TrackedLocation> toolytLocations = new ArrayList<>();
         Utils.getDatabase().getReference().child(Constants.FB_TABLE_NAME)
                 .child(Utils.getDeviceId(context)).addValueEventListener(new ValueEventListener() {
             @Override
@@ -137,7 +135,7 @@ public class ToolytLocation extends Application {
 
 
                 for (DataSnapshot tLocation : tLocations) {
-                    TLocation t = tLocation.getValue(TLocation.class);
+                    TrackedLocation t = tLocation.getValue(TrackedLocation.class);
                     toolytLocations.add(t);
                 }
 
@@ -152,4 +150,5 @@ public class ToolytLocation extends Application {
 
         return toolytLocations;
     }
+
 }

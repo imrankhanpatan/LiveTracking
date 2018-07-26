@@ -3,18 +3,20 @@ package com.toolyt.location.model;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class TLocation {
+public class TStayedLocation {
 
     private String time;
     private String latitude;
     private String longitude;
-    private String accuracy;
+    private String address;
+    private String duration;
 
-    public TLocation(String time, String latitude, String longitude, String accuracy) {
+    public TStayedLocation(String time, String latitude, String longitude, String address, String duration) {
         this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.accuracy = accuracy;
+        this.address = address;
+        this.duration = duration;
     }
 
 
@@ -42,11 +44,20 @@ public class TLocation {
         this.longitude = longitude;
     }
 
-    public String getAccuracy() {
-        return accuracy;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAccuracy(String accuracy) {
-        this.accuracy = accuracy;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }
+

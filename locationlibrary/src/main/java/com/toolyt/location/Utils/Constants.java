@@ -24,5 +24,8 @@ public class Constants {
     public static final double MIN_LOCATION_DEVIATION = 50.0;
     public static final double MAX_LOCATION_DEVIATION = 500.0;
     public static final String FB_TABLE_NAME = "ToolytLocations";
+    public static final String FB_STAYED_TABLE_NAME = "StayedLocations";
+    public static final String FB_TRACKED_LOCATION = "TrackedLocations";
+
 
 }

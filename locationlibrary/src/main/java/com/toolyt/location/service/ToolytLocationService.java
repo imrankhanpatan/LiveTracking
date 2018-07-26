@@ -34,13 +34,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.toolyt.location.R;
 import com.toolyt.location.Utils.Constants;
+import com.toolyt.location.Utils.ToolytStorage;
 import com.toolyt.location.Utils.Utils;
 import com.toolyt.location.activity.HomeActivity;
 import com.toolyt.location.database.LocationData;
 import com.toolyt.location.database.LocationDatabase;
 import com.toolyt.location.model.FilteredLocationData;
 import com.toolyt.location.model.StayedLocation;
-import com.toolyt.location.model.TLocation;
+import com.toolyt.location.model.TStayedLocation;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -68,8 +69,11 @@ public class ToolytLocationService extends Service {
     private Location prevLocation = null;
     private Location pLocation = null;
     private ArrayList<Location> stayedLocations = new ArrayList<>();
-    String deviceId;
-
+    private String deviceId;
+    private String _color = "";
+    private String _companyId;
+    private String _userId;
+    private String _userName;
 
     @Override
     public void onCreate() {
@@ -247,15 +251,32 @@ public class ToolytLocationService extends Service {
 
                 LatLng latLng = computeCentroid(stayedLocations);
                 if (startDate != null && endDate != null) {
-                    String time = Utils.getSpentTime(startDate, endDate);
-                    Log.d("STAYED_TIME", "" + time);
+                    String duration = Utils.getSpentTime(startDate, endDate);
+                    Log.d("STAYED_TIME", "" + duration);
 
                     StayedLocation stayedLocation = new StayedLocation();
                     stayedLocation.setTime("" + Utils.getCurrentTime());
                     stayedLocation.setLongitude("" + latLng.longitude);
                     stayedLocation.setLatitude("" + latLng.latitude);
-                    stayedLocation.setDuration("" + time);
+                    stayedLocation.setDuration("" + duration);
                     locationDatabase.daoLocation().insertStayedLocation(stayedLocation);
+
+                    String address = Utils.getLocalAddress(getApplicationContext(), latLng.latitude, latLng.longitude);
+                    String id = Utils.getDatabase().getReference().push().getKey();
+                    String time = Utils.convertDate("" + mCurrentLocation.getTime(), "hh:mm:ss aa");
+                    String date = Utils.convertDate("" + mCurrentLocation.getTime(), "yyyy-MM-dd");
+                    TStayedLocation location = new TStayedLocation(
+                            "" + time,
+                            "" + latLng.latitude,
+                            "" + latLng.longitude,
+                            "" + address,
+                            "" + duration
+                    );
+
+                    stayedLocation.setAddress(address);
+                    Utils.getDatabase().getReference().child(Constants.FB_TABLE_NAME).child(Constants.FB_STAYED_TABLE_NAME).child(deviceId).child(date)
+                            .child(id).setValue(location);
+
                     stayedLocations.clear();
                 }
             }
@@ -374,13 +395,20 @@ public class ToolytLocationService extends Service {
 
     private void writeNewLocation(Location mCurrentLocation) {
         try {
-            TLocation location = new TLocation("" + mCurrentLocation.getTime(),
-                    "" + mCurrentLocation.getLatitude(),
-                    "" + mCurrentLocation.getLongitude(),
-                    "" + mCurrentLocation.getAccuracy());
-            String id = Utils.getDatabase().getReference().getKey();
-            Utils.getDatabase().getReference().child(Constants.FB_TABLE_NAME).child(deviceId)
-                    .child(Utils.getDatabase().getReference().push().getKey()).setValue(location);
+            if (mCurrentLocation != null) {
+                ToolytStorage storage = new ToolytStorage();
+                storage.storeTrackedLocation(getApplicationContext(), mCurrentLocation);
+                /*Log.d("L_DATE", "" + date + "" + time);
+
+                TrackedLocation location = new TrackedLocation("" + time,
+                        "" + mCurrentLocation.getLatitude(),
+                        "" + mCurrentLocation.getLongitude(),
+                        "" + mCurrentLocation.getAccuracy(),
+                        "" + mCurrentLocation.getSpeed());*/
+
+
+                //insertStayedLocation();
+            }
         } catch (Exception e) {
 
         }
@@ -432,9 +460,13 @@ public class ToolytLocationService extends Service {
         }
     }
 
-    public void startLocationService(Context context) {
+    public void startLocationService(Context context, String userId, String userName,
+                                     String companyId, String color) {
         try {
-
+            this._userId = userId;
+            this._userName = userName;
+            this._companyId = companyId;
+            this._color = color;
             Intent serviceIntent = new Intent(context, ToolytLocationService.class);
             serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
             context.startService(serviceIntent);

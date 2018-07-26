@@ -14,6 +14,7 @@ public class StayedLocation {
     private String latitude;
     private String longitude;
     private String duration;
+    private String address;
 
     @NonNull
     public String getTime() {
@@ -46,5 +47,13 @@ public class StayedLocation {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
