@@ -8,10 +8,9 @@ import android.arch.persistence.room.RoomDatabase;
 
 import com.toolyt.location.model.FilteredLocationData;
 import com.toolyt.location.model.StayedLocation;
-import com.toolyt.location.model.UserActivity;
 
-@Database(entities = {LocationData.class, FilteredLocationData.class, UserActivity.class
-        ,StayedLocation.class}, version = 1, exportSchema = false)
+@Database(entities = {LocationData.class, FilteredLocationData.class
+        , StayedLocation.class}, version = 1, exportSchema = false)
 public abstract class LocationDatabase extends RoomDatabase {
 
     public abstract LocationDao daoLocation();

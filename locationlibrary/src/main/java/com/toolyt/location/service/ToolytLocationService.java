@@ -9,6 +9,7 @@ import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.IBinder;
@@ -33,10 +34,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.toolyt.location.R;
+import com.toolyt.location.Utils.App;
 import com.toolyt.location.Utils.Constants;
-import com.toolyt.location.Utils.ToolytStorage;
+import com.toolyt.location.Utils.ToolytServiceRestartReceiver;
+import com.toolyt.location.Utils.FirebaseModelCreator;
 import com.toolyt.location.Utils.Utils;
-import com.toolyt.location.activity.HomeActivity;
 import com.toolyt.location.database.LocationData;
 import com.toolyt.location.database.LocationDatabase;
 import com.toolyt.location.model.FilteredLocationData;
@@ -70,10 +72,7 @@ public class ToolytLocationService extends Service {
     private Location pLocation = null;
     private ArrayList<Location> stayedLocations = new ArrayList<>();
     private String deviceId;
-    private String _color = "";
-    private String _companyId;
-    private String _userId;
-    private String _userName;
+    private ToolytServiceRestartReceiver receiver;
 
     @Override
     public void onCreate() {
@@ -82,11 +81,17 @@ public class ToolytLocationService extends Service {
             intent = new Intent();
             intent.setAction(LOCATION_ACTION);
             deviceId = Utils.getDeviceId(getApplicationContext());
-
+            startReceiver();
         } catch (Exception e) {
 
         }
 
+    }
+
+    private void startReceiver() {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_TIME_TICK);
+        receiver = new ToolytServiceRestartReceiver();
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -126,6 +131,7 @@ public class ToolytLocationService extends Service {
 
                     if (locationResult.getLastLocation().getAccuracy() <= 100) {
                         mCurrentLocation = locationResult.getLastLocation();
+                        Log.d("ACCURACY_MODE", "2: " + mLocationRequest.getPriority());
                         Toast.makeText(getApplicationContext(),
                                 "Lat: " + mCurrentLocation.getLatitude() + "\nLang: " + mCurrentLocation.getLongitude(),
                                 Toast.LENGTH_SHORT).show();
@@ -138,7 +144,8 @@ public class ToolytLocationService extends Service {
             mLocationRequest = new LocationRequest();
             mLocationRequest.setInterval(Constants.UPDATE_INTERVAL_IN_MILLISECONDS);
             mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            Log.d("ACCURACY_MODE", "" + App.getInstance().getAccuracyMode());
+            mLocationRequest.setPriority(App.getInstance().getAccuracyMode());
 
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
             builder.addLocationRequest(mLocationRequest);
@@ -213,6 +220,7 @@ public class ToolytLocationService extends Service {
             filteredLocationData.setAccuracy("" + mCurrentLocation.getAccuracy());
             locationDatabase.daoLocation().insertFilteredLocation(filteredLocationData);
             writeNewLocation(mCurrentLocation);
+
             Log.d("FILTERED_LOCATION", "Lat: " + mCurrentLocation.getLatitude() + ", " + "Lng: " + mCurrentLocation.getLongitude()
                     + ", " + "Acc: " + mCurrentLocation.getAccuracy() + ", " + "Time: " + Utils.getCurrentTime());
             calculateTime(mCurrentLocation);
@@ -274,8 +282,9 @@ public class ToolytLocationService extends Service {
                     );
 
                     stayedLocation.setAddress(address);
-                    Utils.getDatabase().getReference().child(Constants.FB_TABLE_NAME).child(Constants.FB_STAYED_TABLE_NAME).child(deviceId).child(date)
-                            .child(id).setValue(location);
+                    FirebaseModelCreator.storeStayedLocation(getApplicationContext(), mCurrentLocation);
+                    //   Utils.getDatabase().getReference().child(Constants.FB_TABLE_NAME).child(Constants.FB_STAYED_TABLE_NAME).child(deviceId).child(date)
+                    //         .child(id).setValue(location);
 
                     stayedLocations.clear();
                 }
@@ -395,9 +404,11 @@ public class ToolytLocationService extends Service {
 
     private void writeNewLocation(Location mCurrentLocation) {
         try {
+            Log.d("TRACKED_LOC", ": " + mCurrentLocation.getLatitude());
             if (mCurrentLocation != null) {
-                ToolytStorage storage = new ToolytStorage();
-                storage.storeTrackedLocation(getApplicationContext(), mCurrentLocation);
+                FirebaseModelCreator.storeTrackedLocation(getApplicationContext(), mCurrentLocation);
+                // FirebaseModelCreator storage = new FirebaseModelCreator();
+
                 /*Log.d("L_DATE", "" + date + "" + time);
 
                 TrackedLocation location = new TrackedLocation("" + time,
@@ -426,7 +437,7 @@ public class ToolytLocationService extends Service {
      */
     public void createNotification() {
         try {
-            Intent notificationIntent = new Intent(this, HomeActivity.class);
+            Intent notificationIntent = new Intent(this, ToolytLocationService.class);
             notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -460,13 +471,8 @@ public class ToolytLocationService extends Service {
         }
     }
 
-    public void startLocationService(Context context, String userId, String userName,
-                                     String companyId, String color) {
+    public void startLocationService(Context context) {
         try {
-            this._userId = userId;
-            this._userName = userName;
-            this._companyId = companyId;
-            this._color = color;
             Intent serviceIntent = new Intent(context, ToolytLocationService.class);
             serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
             context.startService(serviceIntent);
@@ -491,7 +497,7 @@ public class ToolytLocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        unregisterReceiver(receiver);
     }
 
 }

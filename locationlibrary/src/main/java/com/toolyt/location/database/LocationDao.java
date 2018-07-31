@@ -6,7 +6,6 @@ import android.arch.persistence.room.Query;
 
 import com.toolyt.location.model.FilteredLocationData;
 import com.toolyt.location.model.StayedLocation;
-import com.toolyt.location.model.UserActivity;
 
 import java.util.List;
 
@@ -24,25 +23,6 @@ public interface LocationDao {
 
     @Query("SELECT * FROM filteredLocationData order by currentTime desc")
     public List<FilteredLocationData> loadFilteredLocations();
-
-    @Insert
-    void insertActivityData(UserActivity userActivity);
-
-    @Query("SELECT * FROM UserActivity order by time desc")
-    public List<UserActivity> getUserActivities();
-
-    @Query("SELECT * FROM UserActivity where activity like 'walking%'")
-    public List<UserActivity> getWalkingActivities();
-
-    @Query("SELECT * FROM UserActivity where activity like 'still%'")
-    public List<UserActivity> getStillActivities();
-
-    @Query("SELECT * FROM UserActivity where activity like 'invehicle%'")
-    public List<UserActivity> getDrivingActivities();
-
-    @Query("SELECT DISTINCT stateId FROM UserActivity where activity like 'still%'")
-    public List<Long> getIdealsStateId();
-
 
     @Insert
     void insertStayedLocation(StayedLocation stayedLocation);

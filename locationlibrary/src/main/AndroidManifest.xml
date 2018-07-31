@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.toolyt.location">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -21,15 +23,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activity.HomeActivity"></activity>
-
         <service
             android:name="com.toolyt.location.service.ToolytLocationService"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
-
-        <activity android:name="com.toolyt.location.activity.IdealActivity"></activity>
+        <receiver android:name="com.toolyt.location.Utils.ToolytServiceRestartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
+                <action android:name="com.toolyt.location.Utils.ToolytServiceRestartReceiver" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

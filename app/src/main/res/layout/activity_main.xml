@@ -7,6 +7,22 @@
     android:orientation="vertical"
     tools:context="com.example.MainActivity">
 
+
+    <Button
+        android:id="@+id/btn_get_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Get current Location" />
+
+    <Button
+        android:id="@+id/btn_reg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Register User" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -26,5 +42,14 @@
             android:text="Stop Tracking" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/curr_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:text="" />
 
 </LinearLayout>
