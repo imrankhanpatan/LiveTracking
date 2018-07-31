@@ -1,4 +1,4 @@
-package com.toolyt.location.Utils;
+package com.toolyt.location.receiver;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;

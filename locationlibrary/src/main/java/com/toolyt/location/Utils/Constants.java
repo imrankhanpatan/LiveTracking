@@ -13,9 +13,6 @@ public class Constants {
         public static String STOPFOREGROUND_ACTION = "com.toolyt.livetracking.mylocationservice.action.stopforeground";
     }
 
-    public static final String BROADCAST_DETECTED_ACTIVITY = "activity_intent";
-    public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 30 * 1000;
-    public static final int CONFIDENCE = 70;
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
     public static final long LOCATION_RADIUS = 150; //in meters

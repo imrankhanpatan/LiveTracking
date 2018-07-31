@@ -9,10 +9,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.toolyt.livetracking.R;
-import com.toolyt.location.Utils.AccuracyMode;
-import com.toolyt.location.Utils.LocationUpdateCallback;
-import com.toolyt.location.Utils.ToolytLocationTracker;
-import com.toolyt.location.Utils.ToolytManager;
+import com.toolyt.location.location.AccuracyMode;
+import com.toolyt.location.location.LocationUpdateCallback;
+import com.toolyt.location.sdk.ToolytLocationTracker;
+import com.toolyt.location.sdk.ToolytManager;
 
 import java.util.HashMap;
 

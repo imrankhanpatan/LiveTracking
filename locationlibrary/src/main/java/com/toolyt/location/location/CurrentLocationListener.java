@@ -1,4 +1,4 @@
-package com.toolyt.location.Utils;
+package com.toolyt.location.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.toolyt.location.Utils.Utils;
 
 
 public class CurrentLocationListener {

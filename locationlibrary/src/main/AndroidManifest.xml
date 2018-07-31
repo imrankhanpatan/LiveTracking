@@ -28,7 +28,7 @@
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
-        <receiver android:name="com.toolyt.location.Utils.ToolytServiceRestartReceiver">
+        <receiver android:name="com.toolyt.location.receiver.ToolytServiceRestartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />

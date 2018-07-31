@@ -1,4 +1,4 @@
-package com.toolyt.location.Utils;
+package com.toolyt.location.location;
 
 import android.location.Location;
 

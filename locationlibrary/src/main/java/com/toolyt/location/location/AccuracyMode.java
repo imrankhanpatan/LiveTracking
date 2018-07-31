@@ -1,4 +1,4 @@
-package com.toolyt.location.Utils;
+package com.toolyt.location.location;
 
 public class AccuracyMode {
     public static final int PRIORITY_HIGH_ACCURACY = 100;

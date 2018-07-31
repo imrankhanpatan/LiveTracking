@@ -36,7 +36,7 @@ import com.google.android.gms.tasks.Task;
 import com.toolyt.location.R;
 import com.toolyt.location.Utils.App;
 import com.toolyt.location.Utils.Constants;
-import com.toolyt.location.Utils.ToolytServiceRestartReceiver;
+import com.toolyt.location.receiver.ToolytServiceRestartReceiver;
 import com.toolyt.location.Utils.FirebaseModelCreator;
 import com.toolyt.location.Utils.Utils;
 import com.toolyt.location.database.LocationData;

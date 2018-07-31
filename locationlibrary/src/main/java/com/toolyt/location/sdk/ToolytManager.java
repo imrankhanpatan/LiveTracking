@@ -1,4 +1,4 @@
-package com.toolyt.location.Utils;
+package com.toolyt.location.sdk;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,6 +16,8 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.toolyt.location.location.CurrentLocationListener;
+import com.toolyt.location.location.LocationUpdateCallback;
 import com.toolyt.location.database.LocationDatabase;
 import com.toolyt.location.service.ToolytLocationService;
 
