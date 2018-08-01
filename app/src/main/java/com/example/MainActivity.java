@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HashMap<String, String> userDetailsMap = new HashMap<>();
-                userDetailsMap.put("color", "#cdcdcd");
-                userDetailsMap.put("company_id", "Toolyt123");
-                userDetailsMap.put("details", "My_details");
-                userDetailsMap.put("user_id", "1234");
-                userDetailsMap.put("user_name", "Immu");
+                HashMap<String, String> metadata = new HashMap<>();
+                metadata.put("color", "#cdcdcd");
+                metadata.put("company_id", "Toolyt123");
+                metadata.put("details", "My_details");
+                metadata.put("user_id", "1234");
+                metadata.put("user_name", "Immu");
 
-                ToolytSDKManager.registerUser(userDetailsMap, new UserRegistrationCallback() {
+                ToolytSDKManager.registerUser(metadata, new UserRegistrationCallback() {
                     @Override
                     public void onSuccess(String success) {
                         Log.d("REG_USER", "" + success);
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(String error) {
                         Log.d("CURR_LOCATION", "" + error);
+                        tvCurrentLoc.setText(error);
                     }
                 });
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //call startLocationUpdates method with ToolytLocation object and pass activity
                 new ToolytLocationTracker(MainActivity.this)
-                        .setAccuracyPriority(AccuracyMode.PRIORITY_MEDIUM_ACCURACY)
+                        .setAccuracyPriority(AccuracyMode.PRIORITY_HIGH_ACCURACY)
                         .startTracker();
             }
         });

@@ -57,16 +57,16 @@ public class ToolytSDKManager extends Application {
     /**
      * store user details in shred preferences
      *
-     * @param userDetails
+     * @param metadata
      */
-    public static void registerUser(HashMap<String, String> userDetails, UserRegistrationCallback userRegistrationCallback) {
+    public static void registerUser(HashMap<String, String> metadata, UserRegistrationCallback userRegistrationCallback) {
         try {
-            Log.d("USER_DEATILS", "1: " + userDetails);
-            if (!userDetails.isEmpty()) {
+            Log.d("USER_DEATILS", "1: " + metadata);
+            if (!metadata.isEmpty()) {
                 //convert to string using gson
                 Gson gson = new Gson();
-                String hashMapString = gson.toJson(userDetails);
-                Log.d("USER_DEATILS", "1: " + userDetails);
+                String hashMapString = gson.toJson(metadata);
+                Log.d("USER_DEATILS", "1: " + metadata);
                 //save in shared prefs
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
                 SharedPreferences.Editor editor = prefs.edit();

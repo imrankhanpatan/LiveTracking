@@ -116,7 +116,7 @@ public class CurrentLocationListener {
                             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                 String error = "Location settings are not satisfied. Attempting to upgrade \" +\n" +
                                         "                                        \"location settings .";
-                                updatedLocationListener.onError("Error: " + error);
+                                updatedLocationListener.onError("Error: Pls enable GPS");
                                 break;
                             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                 String errorMessage = "Location settings are inadequate, and cannot be " +
