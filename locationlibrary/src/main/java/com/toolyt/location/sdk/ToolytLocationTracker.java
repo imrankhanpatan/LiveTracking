@@ -24,7 +24,7 @@ public class ToolytLocationTracker {
         locationService = new ToolytLocationService();
     }
 
-    public ToolytLocationTracker setAccuracy(int priority) {
+    public ToolytLocationTracker setAccuracyPriority(int priority) {
         App.getInstance().setAccuracyMode(priority);
         return this;
     }
@@ -32,7 +32,7 @@ public class ToolytLocationTracker {
     /**
      * Start live location updates
      */
-    public ToolytManager startTracker() {
+    public ToolytSDKManager startTracker() {
         try {
             Dexter.withActivity(activity)
                     .withPermissions(
@@ -65,7 +65,7 @@ public class ToolytLocationTracker {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ToolytManager(activity);
+        return new ToolytSDKManager(activity);
     }
 
     /**

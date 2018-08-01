@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.toolyt.location.Utils.Utils;
+import com.toolyt.location.callback.LocationUpdateCallback;
 
 
 public class CurrentLocationListener {
@@ -113,14 +114,15 @@ public class CurrentLocationListener {
                         int statusCode = ((ApiException) e).getStatusCode();
                         switch (statusCode) {
                             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                Log.i("CURR_LOC", "Location settings are not satisfied. Attempting to upgrade " +
-                                        "location settings ");
+                                String error = "Location settings are not satisfied. Attempting to upgrade \" +\n" +
+                                        "                                        \"location settings .";
+                                updatedLocationListener.onError("Error: " + error);
                                 break;
                             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                 String errorMessage = "Location settings are inadequate, and cannot be " +
                                         "fixed here. Fix in Settings.";
                                 Log.e("CURR_LOC", errorMessage);
-
+                                updatedLocationListener.onError("Error: " + errorMessage);
                         }
 
                         updateLocationUI();

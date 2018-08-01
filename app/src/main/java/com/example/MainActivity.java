@@ -9,10 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.toolyt.livetracking.R;
+import com.toolyt.location.callback.UserRegistrationCallback;
 import com.toolyt.location.location.AccuracyMode;
-import com.toolyt.location.location.LocationUpdateCallback;
+import com.toolyt.location.callback.LocationUpdateCallback;
 import com.toolyt.location.sdk.ToolytLocationTracker;
-import com.toolyt.location.sdk.ToolytManager;
+import com.toolyt.location.sdk.ToolytSDKManager;
 
 import java.util.HashMap;
 
@@ -23,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnGetLocation;
     private Button btnRegister;
     private TextView tvCurrentLoc;
-
-    private ToolytManager toolytManager; //declare ToolytLocation class
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btn_reg);
 
         // initialize ToolytLocation
-        toolytManager = new ToolytManager(MainActivity.this);
+        ToolytSDKManager.initialize(MainActivity.this);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +47,25 @@ public class MainActivity extends AppCompatActivity {
                 userDetailsMap.put("details", "My_details");
                 userDetailsMap.put("user_id", "1234");
                 userDetailsMap.put("user_name", "Immu");
-                toolytManager.registerUser(MainActivity.this, userDetailsMap);
+
+                ToolytSDKManager.registerUser(userDetailsMap, new UserRegistrationCallback() {
+                    @Override
+                    public void onSuccess(String success) {
+                        Log.d("REG_USER", "" + success);
+                    }
+
+                    @Override
+                    public void onFailed(String error) {
+                        Log.d("REG_USER", "" + error);
+                    }
+                });
             }
         });
+
         btnGetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toolytManager.getCurrentLocation(MainActivity.this, new LocationUpdateCallback() {
+                ToolytSDKManager.getCurrentLocation(MainActivity.this, new LocationUpdateCallback() {
                     @Override
                     public void onLocation(Location location) {
                         Log.d("CURR_LOCATION", "" + location.getLatitude());
@@ -67,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailed(String error) {
+                    public void onError(String error) {
                         Log.d("CURR_LOCATION", "" + error);
                     }
                 });
@@ -81,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //call startLocationUpdates method with ToolytLocation object and pass activity
                 new ToolytLocationTracker(MainActivity.this)
-                        .setAccuracy(AccuracyMode.PRIORITY_MEDIUM_ACCURACY)
+                        .setAccuracyPriority(AccuracyMode.PRIORITY_MEDIUM_ACCURACY)
                         .startTracker();
             }
         });

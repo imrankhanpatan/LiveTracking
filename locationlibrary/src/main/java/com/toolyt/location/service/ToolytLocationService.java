@@ -101,10 +101,9 @@ public class ToolytLocationService extends Service {
             if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
                 Log.i(TAG, "Received Start Foreground Intent ");
                 Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_SHORT).show();
-
-                createNotification();
                 init();
-                getCurrentLocation();
+                createNotification();
+                //startLocationUpdates();
 
             } else if (intent.getAction().equals(
                     Constants.ACTION.STOPFOREGROUND_ACTION)) {
@@ -155,6 +154,7 @@ public class ToolytLocationService extends Service {
                     LocationDatabase.class, Constants.DATABASE_NAME)
                     .fallbackToDestructiveMigration().allowMainThreadQueries()
                     .build();
+            startLocationUpdates();
         } catch (Exception e) {
 
         }
@@ -374,7 +374,7 @@ public class ToolytLocationService extends Service {
     public void getCurrentLocation() {
         try {
             // Requesting ACCESS_FINE_LOCATION using Dexter library
-            startLocationUpdates();
+
 
         } catch (Exception e) {
 
