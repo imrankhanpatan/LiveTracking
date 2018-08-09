@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.toolyt.livetracking.R;
 import com.toolyt.location.callback.UserRegistrationCallback;
@@ -94,7 +95,24 @@ public class MainActivity extends AppCompatActivity {
                 //call startLocationUpdates method with ToolytLocation object and pass activity
                 new ToolytLocationTracker(MainActivity.this)
                         .setAccuracyPriority(AccuracyMode.PRIORITY_HIGH_ACCURACY)
-                        .startTracker();
+                        .startTracker(new LocationUpdateCallback() {
+                            @Override
+                            public void onLocation(Location location) {
+                                Toast.makeText(getApplicationContext(),
+                                                "Lat: " + location.getLatitude() + "\nLang: " + location.getLongitude(),
+                                              Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onAddress(String address) {
+
+                            }
+
+                            @Override
+                            public void onError(String error) {
+
+                            }
+                        });
             }
         });
 

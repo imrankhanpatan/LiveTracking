@@ -12,9 +12,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.BuildConfig;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,6 +39,7 @@ import com.google.android.gms.tasks.Task;
 import com.toolyt.location.R;
 import com.toolyt.location.Utils.App;
 import com.toolyt.location.Utils.Constants;
+import com.toolyt.location.callback.LocationUpdateCallback;
 import com.toolyt.location.receiver.ToolytServiceRestartReceiver;
 import com.toolyt.location.Utils.FirebaseModelCreator;
 import com.toolyt.location.Utils.Utils;
@@ -73,6 +77,7 @@ public class ToolytLocationService extends Service {
     private ArrayList<Location> stayedLocations = new ArrayList<>();
     private String deviceId;
     private ToolytServiceRestartReceiver receiver;
+    private LocationUpdateCallback updateCallback;
 
     @Override
     public void onCreate() {
@@ -81,6 +86,7 @@ public class ToolytLocationService extends Service {
             intent = new Intent();
             intent.setAction(LOCATION_ACTION);
             deviceId = Utils.getDeviceId(getApplicationContext());
+            this.updateCallback = App.getInstance().getLocationUpdateCallback();
             startReceiver();
         } catch (Exception e) {
 
@@ -103,8 +109,6 @@ public class ToolytLocationService extends Service {
                 Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_SHORT).show();
                 init();
                 createNotification();
-                //startLocationUpdates();
-
             } else if (intent.getAction().equals(
                     Constants.ACTION.STOPFOREGROUND_ACTION)) {
                 Log.i(TAG, "Received Stop Foreground Intent");
@@ -131,9 +135,14 @@ public class ToolytLocationService extends Service {
                     if (locationResult.getLastLocation().getAccuracy() <= 100) {
                         mCurrentLocation = locationResult.getLastLocation();
                         Log.d("ACCURACY_MODE", "2: " + mLocationRequest.getPriority());
-                        Toast.makeText(getApplicationContext(),
-                                "Lat: " + mCurrentLocation.getLatitude() + "\nLang: " + mCurrentLocation.getLongitude(),
-                                Toast.LENGTH_SHORT).show();
+                        if (updateCallback != null) {
+                            updateCallback.onLocation(mCurrentLocation);
+                            updateCallback.onAddress(Utils.getLocalAddress(getApplicationContext(),
+                                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+                        }
+                        //   Toast.makeText(getApplicationContext(),
+                        //         "Lat: " + mCurrentLocation.getLatitude() + "\nLang: " + mCurrentLocation.getLongitude(),
+                        //       Toast.LENGTH_SHORT).show();
                         updateLocationUI();
                     }
 
@@ -352,14 +361,14 @@ public class ToolytLocationService extends Service {
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                     Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " +
                                             "location settings ");
-                                    Toast.makeText(getApplicationContext(), "Please enable GPS", Toast.LENGTH_LONG).show();
+                                   // updateCallback.onError("Please enable GPS");
+                                    openSettings();
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                     String errorMessage = "Location settings are inadequate, and cannot be " +
                                             "fixed here. Fix in Settings.";
                                     Log.e(TAG, errorMessage);
-
-                                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                                    updateCallback.onError(errorMessage);
                             }
 
                             updateLocationUI();
@@ -370,15 +379,15 @@ public class ToolytLocationService extends Service {
 
         }
     }
-
-    public void getCurrentLocation() {
-        try {
-            // Requesting ACCESS_FINE_LOCATION using Dexter library
-
-
-        } catch (Exception e) {
-
-        }
+    private void openSettings() {
+        Intent intent = new Intent();
+        intent.setAction(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package",
+                BuildConfig.APPLICATION_ID, null);
+        intent.setData(uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void stopLocationUpdates() {
@@ -407,18 +416,6 @@ public class ToolytLocationService extends Service {
             Log.d("TRACKED_LOC", ": " + mCurrentLocation.getLatitude());
             if (mCurrentLocation != null) {
                 FirebaseModelCreator.storeTrackedLocation(getApplicationContext(), mCurrentLocation);
-                // FirebaseModelCreator storage = new FirebaseModelCreator();
-
-                /*Log.d("L_DATE", "" + date + "" + time);
-
-                TrackedLocation location = new TrackedLocation("" + time,
-                        "" + mCurrentLocation.getLatitude(),
-                        "" + mCurrentLocation.getLongitude(),
-                        "" + mCurrentLocation.getAccuracy(),
-                        "" + mCurrentLocation.getSpeed());*/
-
-
-                //insertStayedLocation();
             }
         } catch (Exception e) {
 
@@ -455,7 +452,8 @@ public class ToolytLocationService extends Service {
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 int importance = NotificationManager.IMPORTANCE_HIGH;
-                NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, "Live Tracker Notifications", importance);
+                NotificationChannel notificationChannel =
+                        new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, "Toolyt Notifications", importance);
                 notificationChannel.enableLights(true);
                 notificationChannel.setLightColor(Color.RED);
                 notificationChannel.setShowBadge(true);
@@ -471,8 +469,9 @@ public class ToolytLocationService extends Service {
         }
     }
 
-    public void startLocationService(Context context) {
+    public void startLocationService(Context context, LocationUpdateCallback updateCallback) {
         try {
+            App.getInstance().setLocationUpdateCallback(updateCallback);
             Intent serviceIntent = new Intent(context, ToolytLocationService.class);
             serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
             context.startService(serviceIntent);

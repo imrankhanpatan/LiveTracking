@@ -2,9 +2,13 @@ package com.toolyt.location.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.BuildConfig;
 import android.util.Log;
 
 import com.google.android.gms.common.api.ApiException;
@@ -23,6 +27,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.toolyt.location.Utils.Utils;
 import com.toolyt.location.callback.LocationUpdateCallback;
+import com.toolyt.location.sdk.ToolytSDKManager;
 
 
 public class CurrentLocationListener {
@@ -117,12 +122,14 @@ public class CurrentLocationListener {
                                 String error = "Location settings are not satisfied. Attempting to upgrade \" +\n" +
                                         "                                        \"location settings .";
                                 updatedLocationListener.onError("Error: Pls enable GPS");
+                                ToolytSDKManager.openSettings(context);
                                 break;
                             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                 String errorMessage = "Location settings are inadequate, and cannot be " +
                                         "fixed here. Fix in Settings.";
                                 Log.e("CURR_LOC", errorMessage);
                                 updatedLocationListener.onError("Error: " + errorMessage);
+
                         }
 
                         updateLocationUI();

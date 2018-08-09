@@ -5,8 +5,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.v4.BuildConfig;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -108,7 +112,8 @@ public class ToolytSDKManager extends Application {
                             // check for permanent denial of any permission
                             if (report.isAnyPermissionPermanentlyDenied()) {
                                 // permission is denied permenantly, navigate user to app settings
-                                updatedLocationListener.onError("Enable permissions in App settings");
+                               // updatedLocationListener.onError("Enable permissions in App settings");
+                                openSettings(activity);
                             }
                         }
 
@@ -123,6 +128,17 @@ public class ToolytSDKManager extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void openSettings(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package",
+                BuildConfig.APPLICATION_ID, null);
+        intent.setData(uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 }

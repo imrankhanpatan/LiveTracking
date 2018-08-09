@@ -10,6 +10,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.toolyt.location.Utils.App;
+import com.toolyt.location.callback.LocationUpdateCallback;
 import com.toolyt.location.service.ToolytLocationService;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class ToolytLocationTracker {
     /**
      * Start live location updates
      */
-    public ToolytSDKManager startTracker() {
+    public ToolytSDKManager startTracker(final LocationUpdateCallback updateCallback) {
         try {
             Dexter.withActivity(activity)
                     .withPermissions(
@@ -44,7 +45,7 @@ public class ToolytLocationTracker {
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
-                                locationService.startLocationService(activity);
+                                locationService.startLocationService(activity,updateCallback);
                             }
 
                             // check for permanent denial of any permission

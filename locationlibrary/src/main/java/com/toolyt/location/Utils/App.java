@@ -1,8 +1,11 @@
 package com.toolyt.location.Utils;
 
+import com.toolyt.location.callback.LocationUpdateCallback;
+
 public class App {
     private static App mInstance;
     private int AccuracyMode = com.toolyt.location.location.AccuracyMode.PRIORITY_HIGH_ACCURACY;
+    private LocationUpdateCallback locationUpdateCallback;
 
     private App() {
     }  //private constructor.
@@ -23,4 +26,11 @@ public class App {
         AccuracyMode = accuracyMode;
     }
 
+    public LocationUpdateCallback getLocationUpdateCallback() {
+        return locationUpdateCallback;
+    }
+
+    public void setLocationUpdateCallback(LocationUpdateCallback locationUpdateCallback) {
+        this.locationUpdateCallback = locationUpdateCallback;
+    }
 }

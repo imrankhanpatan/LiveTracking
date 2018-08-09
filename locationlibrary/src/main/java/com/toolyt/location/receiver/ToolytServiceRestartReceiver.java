@@ -4,7 +4,9 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
+import com.toolyt.location.callback.LocationUpdateCallback;
 import com.toolyt.location.service.ToolytLocationService;
 
 public class ToolytServiceRestartReceiver extends BroadcastReceiver {
@@ -22,7 +24,22 @@ public class ToolytServiceRestartReceiver extends BroadcastReceiver {
             }
             if (!isServiceRunning) {
                 ToolytLocationService locationService = new ToolytLocationService();
-                locationService.startLocationService(context);
+                locationService.startLocationService(context, new LocationUpdateCallback() {
+                    @Override
+                    public void onLocation(Location location) {
+
+                    }
+
+                    @Override
+                    public void onAddress(String address) {
+
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
             }
         }
     }
