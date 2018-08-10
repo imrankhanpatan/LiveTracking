@@ -22,11 +22,20 @@ import static android.content.Context.ACTIVITY_SERVICE;
 public class ToolytLocationTracker {
 
     private Activity activity;
+    private static ToolytLocationTracker mInstance;
     ToolytLocationService locationService;
 
     public ToolytLocationTracker(Activity activity) {
-        this.activity = activity;
         locationService = new ToolytLocationService();
+        this.activity = activity;
+    }
+
+
+    public static ToolytLocationTracker getInstance(Activity activity) {
+        if (mInstance == null) { //if there is no instance available... create new one
+            mInstance = new ToolytLocationTracker(activity);
+        }
+        return mInstance;
     }
 
     public ToolytLocationTracker setAccuracyPriority(int priority) {
@@ -37,7 +46,7 @@ public class ToolytLocationTracker {
     /**
      * Start live location updates
      */
-    public ToolytSDKManager startTracker(final LocationUpdateCallback updateCallback) {
+    public ToolytSDKManager startTracker() {
         try {
             Dexter.withActivity(activity)
                     .withPermissions(
@@ -49,7 +58,7 @@ public class ToolytLocationTracker {
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
-                                locationService.startLocationService(activity, updateCallback);
+                                locationService.startLocationService(activity);
                             }
 
                             // check for permanent denial of any permission

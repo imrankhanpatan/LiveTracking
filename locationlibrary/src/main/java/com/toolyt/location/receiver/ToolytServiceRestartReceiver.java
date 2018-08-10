@@ -24,22 +24,7 @@ public class ToolytServiceRestartReceiver extends BroadcastReceiver {
             }
             if (!isServiceRunning) {
                 ToolytLocationService locationService = new ToolytLocationService();
-                locationService.startLocationService(context, new LocationUpdateCallback() {
-                    @Override
-                    public void onLocation(Location location) {
-
-                    }
-
-                    @Override
-                    public void onAddress(String address) {
-
-                    }
-
-                    @Override
-                    public void onError(String error) {
-
-                    }
-                });
+                locationService.startLocationService(context);
             }
         }
     }

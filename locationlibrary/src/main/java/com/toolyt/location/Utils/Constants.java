@@ -19,6 +19,7 @@ public class Constants {
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
     public static final String DATABASE_NAME = "location_db";
     public static final double MIN_LOCATION_DEVIATION = 50.0;
+    public static final double MAX_ACCURACY_DIFFERENCE = 400.0;
     public static final double MAX_LOCATION_DEVIATION = 500.0;
     public static final String FB_TABLE_NAME = "ToolytLocations";
     public static final String FB_STAYED_TABLE_NAME = "StayedLocations";

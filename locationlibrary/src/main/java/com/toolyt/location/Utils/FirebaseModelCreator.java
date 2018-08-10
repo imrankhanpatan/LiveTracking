@@ -33,6 +33,8 @@ public class FirebaseModelCreator {
             ref.child("latitude").setValue(location.getLatitude());
             ref.child("longitude").setValue(location.getLongitude());
             ref.child("address").setValue(address);
+            ref.child("accuracy").setValue(location.getAccuracy());
+            ref.child("speed").setValue(location.getSpeed());
 
             if (userDetails != null) {
                 for (Map.Entry map : userDetails.entrySet()) {

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnGetLocation;
     private Button btnRegister;
     private TextView tvCurrentLoc;
+    ToolytLocationTracker locationTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize ToolytLocation
         ToolytSDKManager.initialize(MainActivity.this);
-
+        locationTracker = ToolytLocationTracker.getInstance(MainActivity.this);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,26 +97,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //call startLocationUpdates method with ToolytLocation object and pass activity
-                new ToolytLocationTracker(MainActivity.this)
+                /*new ToolytLocationTracker(MainActivity.this)
                         .setAccuracyPriority(AccuracyMode.PRIORITY_HIGH_ACCURACY)
-                        .startTracker(new LocationUpdateCallback() {
-                            @Override
-                            public void onLocation(Location location) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Lat: " + location.getLatitude() + "\nLang: " + location.getLongitude(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                        .startTracker();*/
 
-                            @Override
-                            public void onAddress(String address) {
-
-                            }
-
-                            @Override
-                            public void onError(String error) {
-
-                            }
-                        });
+                locationTracker.startTracker();
             }
         });
 
@@ -123,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //call stopLocationUpdates method with ToolytLocation object and pass context
-                new ToolytLocationTracker(MainActivity.this).stopTracker();
-
+                // new ToolytLocationTracker(MainActivity.this).stopTracker();
+                locationTracker.stopTracker();
             }
         });
     }

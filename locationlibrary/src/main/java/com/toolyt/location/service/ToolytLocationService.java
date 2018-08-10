@@ -39,8 +39,6 @@ import com.google.android.gms.tasks.Task;
 import com.toolyt.location.R;
 import com.toolyt.location.Utils.App;
 import com.toolyt.location.Utils.Constants;
-import com.toolyt.location.callback.LocationUpdateCallback;
-import com.toolyt.location.receiver.ToolytServiceRestartReceiver;
 import com.toolyt.location.Utils.FirebaseModelCreator;
 import com.toolyt.location.Utils.Utils;
 import com.toolyt.location.database.LocationData;
@@ -48,6 +46,7 @@ import com.toolyt.location.database.LocationDatabase;
 import com.toolyt.location.model.FilteredLocationData;
 import com.toolyt.location.model.StayedLocation;
 import com.toolyt.location.model.TStayedLocation;
+import com.toolyt.location.receiver.ToolytServiceRestartReceiver;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class ToolytLocationService extends Service {
     private ArrayList<Location> stayedLocations = new ArrayList<>();
     private String deviceId;
     private ToolytServiceRestartReceiver receiver;
-    private LocationUpdateCallback updateCallback;
+   // private LocationUpdateCallback updateCallback;
 
     @Override
     public void onCreate() {
@@ -86,7 +85,7 @@ public class ToolytLocationService extends Service {
             intent = new Intent();
             intent.setAction(LOCATION_ACTION);
             deviceId = Utils.getDeviceId(getApplicationContext());
-            this.updateCallback = App.getInstance().getLocationUpdateCallback();
+           // this.updateCallback = App.getInstance().getLocationUpdateCallback();
             startReceiver();
         } catch (Exception e) {
 
@@ -132,14 +131,14 @@ public class ToolytLocationService extends Service {
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
 
-                    if (locationResult.getLastLocation().getAccuracy() <= 100) {
+                    if (locationResult.getLastLocation().getAccuracy() <= Constants.MAX_ACCURACY_DIFFERENCE) {
                         mCurrentLocation = locationResult.getLastLocation();
                         Log.d("ACCURACY_MODE", "2: " + mLocationRequest.getPriority());
-                        if (updateCallback != null) {
+                       /* if (updateCallback != null) {
                             updateCallback.onLocation(mCurrentLocation);
                             updateCallback.onAddress(Utils.getLocalAddress(getApplicationContext(),
                                     mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-                        }
+                        }*/
                         //   Toast.makeText(getApplicationContext(),
                         //         "Lat: " + mCurrentLocation.getLatitude() + "\nLang: " + mCurrentLocation.getLongitude(),
                         //       Toast.LENGTH_SHORT).show();
@@ -368,7 +367,7 @@ public class ToolytLocationService extends Service {
                                     String errorMessage = "Location settings are inadequate, and cannot be " +
                                             "fixed here. Fix in Settings.";
                                     Log.e(TAG, errorMessage);
-                                    updateCallback.onError(errorMessage);
+                                  //  updateCallback.onError(errorMessage);
                             }
 
                             updateLocationUI();
@@ -469,9 +468,9 @@ public class ToolytLocationService extends Service {
         }
     }
 
-    public void startLocationService(Context context, LocationUpdateCallback updateCallback) {
+    public void startLocationService(Context context) {
         try {
-            App.getInstance().setLocationUpdateCallback(updateCallback);
+            //App.getInstance().setLocationUpdateCallback(updateCallback);
             Intent serviceIntent = new Intent(context, ToolytLocationService.class);
             serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
             context.startService(serviceIntent);
