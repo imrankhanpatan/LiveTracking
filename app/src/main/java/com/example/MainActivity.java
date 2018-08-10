@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         btnGetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToolytSDKManager.getCurrentLocation(MainActivity.this, new LocationUpdateCallback() {
+               /* ToolytSDKManager.getCurrentLocation(MainActivity.this, new LocationUpdateCallback() {
                     @Override
                     public void onLocation(Location location) {
                         Log.d("CURR_LOCATION", "" + location.getLatitude());
@@ -84,7 +84,10 @@ public class MainActivity extends AppCompatActivity {
                         tvCurrentLoc.setText(error);
                     }
                 });
+*/
 
+                Boolean isRunning = ToolytLocationTracker.isServiceRunning(MainActivity.this);
+                Log.d("IS_RUNNING", "" + isRunning);
 
             }
         });
@@ -99,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onLocation(Location location) {
                                 Toast.makeText(getApplicationContext(),
-                                                "Lat: " + location.getLatitude() + "\nLang: " + location.getLongitude(),
-                                              Toast.LENGTH_SHORT).show();
+                                        "Lat: " + location.getLatitude() + "\nLang: " + location.getLongitude(),
+                                        Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

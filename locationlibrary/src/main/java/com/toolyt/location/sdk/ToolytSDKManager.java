@@ -2,6 +2,7 @@ package com.toolyt.location.sdk;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;

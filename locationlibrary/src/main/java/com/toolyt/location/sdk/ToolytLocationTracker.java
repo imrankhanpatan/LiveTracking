@@ -2,6 +2,8 @@ package com.toolyt.location.sdk;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -14,6 +16,8 @@ import com.toolyt.location.callback.LocationUpdateCallback;
 import com.toolyt.location.service.ToolytLocationService;
 
 import java.util.List;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 public class ToolytLocationTracker {
 
@@ -45,7 +49,7 @@ public class ToolytLocationTracker {
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
-                                locationService.startLocationService(activity,updateCallback);
+                                locationService.startLocationService(activity, updateCallback);
                             }
 
                             // check for permanent denial of any permission
@@ -80,5 +84,17 @@ public class ToolytLocationTracker {
         }
 
     }
+
+    public static boolean isServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("com.toolyt.location.service.ToolytLocationService"
+                    .equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
