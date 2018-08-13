@@ -22,6 +22,7 @@ import static android.content.Context.ACTIVITY_SERVICE;
 public class ToolytLocationTracker {
 
     private Activity activity;
+    private Context context;
     private static ToolytLocationTracker mInstance;
     ToolytLocationService locationService;
 
@@ -30,10 +31,21 @@ public class ToolytLocationTracker {
         this.activity = activity;
     }
 
+    public ToolytLocationTracker(Context context) {
+        this.context = context;
+        locationService = new ToolytLocationService();
+    }
 
     public static ToolytLocationTracker getInstance(Activity activity) {
         if (mInstance == null) { //if there is no instance available... create new one
             mInstance = new ToolytLocationTracker(activity);
+        }
+        return mInstance;
+    }
+
+    public static ToolytLocationTracker getInstance(Context context) {
+        if (mInstance == null) { //if there is no instance available... create new one
+            mInstance = new ToolytLocationTracker(context);
         }
         return mInstance;
     }
@@ -45,7 +57,7 @@ public class ToolytLocationTracker {
 
     /**
      * Start live location updates
-     */
+     *//*
     public ToolytSDKManager startTracker() {
         try {
             Dexter.withActivity(activity)
@@ -80,6 +92,19 @@ public class ToolytLocationTracker {
             e.printStackTrace();
         }
         return new ToolytSDKManager(activity);
+    }
+*/
+
+    /**
+     * Start live location updates
+     */
+    public ToolytSDKManager startTracker() {
+        try {
+            locationService.startLocationService(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ToolytSDKManager(context);
     }
 
     /**

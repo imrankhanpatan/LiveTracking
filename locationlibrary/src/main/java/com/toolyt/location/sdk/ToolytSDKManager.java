@@ -86,6 +86,8 @@ public class ToolytSDKManager extends Application {
         }
     }
 
+
+
     /**
      * Getting current location on user request
      *
@@ -126,6 +128,22 @@ public class ToolytSDKManager extends Application {
                     .onSameThread()
                     .check();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Getting current location on user request
+     *
+     * @param context
+     * @param updatedLocationListener
+     */
+
+    public static void getCurrentLocation(final Context context, final LocationUpdateCallback updatedLocationListener) {
+        try {
+            CurrentLocationListener currentLocationListener = new CurrentLocationListener(context);
+            currentLocationListener.getLocation(updatedLocationListener);
         } catch (Exception e) {
             e.printStackTrace();
         }

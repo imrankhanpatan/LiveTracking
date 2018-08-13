@@ -18,8 +18,6 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.BuildConfig;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -76,7 +74,7 @@ public class ToolytLocationService extends Service {
     private ArrayList<Location> stayedLocations = new ArrayList<>();
     private String deviceId;
     private ToolytServiceRestartReceiver receiver;
-   // private LocationUpdateCallback updateCallback;
+    // private LocationUpdateCallback updateCallback;
 
     @Override
     public void onCreate() {
@@ -85,7 +83,7 @@ public class ToolytLocationService extends Service {
             intent = new Intent();
             intent.setAction(LOCATION_ACTION);
             deviceId = Utils.getDeviceId(getApplicationContext());
-           // this.updateCallback = App.getInstance().getLocationUpdateCallback();
+            // this.updateCallback = App.getInstance().getLocationUpdateCallback();
             startReceiver();
         } catch (Exception e) {
 
@@ -104,13 +102,13 @@ public class ToolytLocationService extends Service {
         try {
 
             if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
-                Log.i(TAG, "Received Start Foreground Intent ");
-                Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_SHORT).show();
+               // Log.i(TAG, "Received Start Foreground Intent ");
+               // Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_SHORT).show();
                 init();
                 createNotification();
             } else if (intent.getAction().equals(
                     Constants.ACTION.STOPFOREGROUND_ACTION)) {
-                Log.i(TAG, "Received Stop Foreground Intent");
+               // Log.i(TAG, "Received Stop Foreground Intent");
                 stopLocationUpdates();
             }
         } catch (Exception e) {
@@ -133,7 +131,7 @@ public class ToolytLocationService extends Service {
 
                     if (locationResult.getLastLocation().getAccuracy() <= Constants.MAX_ACCURACY_DIFFERENCE) {
                         mCurrentLocation = locationResult.getLastLocation();
-                        Log.d("ACCURACY_MODE", "2: " + mLocationRequest.getPriority());
+                      //  Log.d("ACCURACY_MODE", "2: " + mLocationRequest.getPriority());
                        /* if (updateCallback != null) {
                             updateCallback.onLocation(mCurrentLocation);
                             updateCallback.onAddress(Utils.getLocalAddress(getApplicationContext(),
@@ -151,7 +149,7 @@ public class ToolytLocationService extends Service {
             mLocationRequest = new LocationRequest();
             mLocationRequest.setInterval(Constants.UPDATE_INTERVAL_IN_MILLISECONDS);
             mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-            Log.d("ACCURACY_MODE", "" + App.getInstance().getAccuracyMode());
+          //  Log.d("ACCURACY_MODE", "" + App.getInstance().getAccuracyMode());
             mLocationRequest.setPriority(App.getInstance().getAccuracyMode());
 
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
@@ -178,11 +176,10 @@ public class ToolytLocationService extends Service {
             //  Toast.makeText(getApplicationContext(), "In update Loc", Toast.LENGTH_SHORT).show();
             if (mCurrentLocation != null) {
                 //  Toast.makeText(getApplicationContext(), "Curr; " + mCurrentLocation.getLatitude(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Lat: " + mCurrentLocation.getLatitude() + ", " + "Lng: " + mCurrentLocation.getLongitude()
-                        + ", " + "Acc: " + mCurrentLocation.getAccuracy() + ", " + "Time: " + Utils.getCurrentTime());
+              //  Log.d(TAG, "Lat: " + mCurrentLocation.getLatitude() + ", " + "Lng: " + mCurrentLocation.getLongitude()
+                //        + ", " + "Acc: " + mCurrentLocation.getAccuracy() + ", " + "Time: " + Utils.getCurrentTime());
                 latitude = mCurrentLocation.getLatitude();
                 longitude = mCurrentLocation.getLongitude();
-                // Toast.makeText(getApplicationContext(), "SPEED: " + mCurrentLocation.hasSpeed(), Toast.LENGTH_SHORT).show();
 
                 locationData = new LocationData();
                 locationData.setLatitude("" + latitude);
@@ -202,12 +199,12 @@ public class ToolytLocationService extends Service {
                 double dis = pLocation.distanceTo(mCurrentLocation);
 
                 locationData.setDiff("" + dis);
-                Log.d("LOCATION_DIFFERENCE", "" + prevLocation.distanceTo(mCurrentLocation));
+              //  Log.d("LOCATION_DIFFERENCE", "" + prevLocation.distanceTo(mCurrentLocation));
                 locationDatabase.daoLocation().insertLocation(locationData);
 
-//            pLocation = mCurrentLocation;
-
                 if (prevLocation.distanceTo(mCurrentLocation) >= Constants.MIN_LOCATION_DEVIATION) {
+                //    Log.d("LOCATION_UPDATED", "" + prevLocation.distanceTo(mCurrentLocation));
+                   // Toast.makeText(getApplicationContext(), "Locaiton Updated", Toast.LENGTH_SHORT).show();
                     addFilteredLocationToDB();
                     prevLocation = mCurrentLocation;
                 }
@@ -229,8 +226,8 @@ public class ToolytLocationService extends Service {
             locationDatabase.daoLocation().insertFilteredLocation(filteredLocationData);
             writeNewLocation(mCurrentLocation);
 
-            Log.d("FILTERED_LOCATION", "Lat: " + mCurrentLocation.getLatitude() + ", " + "Lng: " + mCurrentLocation.getLongitude()
-                    + ", " + "Acc: " + mCurrentLocation.getAccuracy() + ", " + "Time: " + Utils.getCurrentTime());
+          //  Log.d("FILTERED_LOCATION", "Lat: " + mCurrentLocation.getLatitude() + ", " + "Lng: " + mCurrentLocation.getLongitude()
+            //        + ", " + "Acc: " + mCurrentLocation.getAccuracy() + ", " + "Time: " + Utils.getCurrentTime());
             calculateTime(mCurrentLocation);
 
         } catch (Exception e) {
@@ -258,17 +255,17 @@ public class ToolytLocationService extends Service {
     private void insertStayedLocation() {
         try {
             if (stayedLocations.size() > 0) {
-                Log.d("STAYED_LOCATIONS", "" + stayedLocations.size());
-                Log.d("IDEAL_DATE", "" + stayedLocations.get(0).getTime());
+             //   Log.d("STAYED_LOCATIONS", "" + stayedLocations.size());
+               // Log.d("IDEAL_DATE", "" + stayedLocations.get(0).getTime());
                 Date startDate = Utils.getTime("" + new Timestamp(stayedLocations.get(0).getTime()));
                 Date endDate = Utils.getTime("" + new Timestamp(stayedLocations.get(stayedLocations.size() - 1).getTime()));
 
-                Log.d("IDEAL_DATE", "" + startDate + "" + endDate);
+              //  Log.d("IDEAL_DATE", "" + startDate + "" + endDate);
 
                 LatLng latLng = computeCentroid(stayedLocations);
                 if (startDate != null && endDate != null) {
                     String duration = Utils.getSpentTime(startDate, endDate);
-                    Log.d("STAYED_TIME", "" + duration);
+                //    Log.d("STAYED_TIME", "" + duration);
 
                     StayedLocation stayedLocation = new StayedLocation();
                     stayedLocation.setTime("" + Utils.getCurrentTime());
@@ -341,9 +338,9 @@ public class ToolytLocationService extends Service {
                         @SuppressLint("MissingPermission")
                         @Override
                         public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                            Log.i(TAG, "All location settings are satisfied.");
+                          //  Log.i(TAG, "All location settings are satisfied.");
 
-                            Toast.makeText(getApplicationContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getApplicationContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
 
                             //noinspection MissingPermission
                             mFusedLocationClient.requestLocationUpdates(mLocationRequest,
@@ -358,16 +355,16 @@ public class ToolytLocationService extends Service {
                             int statusCode = ((ApiException) e).getStatusCode();
                             switch (statusCode) {
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                    Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " +
-                                            "location settings ");
-                                   // updateCallback.onError("Please enable GPS");
+                                 //   Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " +
+                                   //         "location settings ");
+                                    // updateCallback.onError("Please enable GPS");
                                     openSettings();
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                     String errorMessage = "Location settings are inadequate, and cannot be " +
                                             "fixed here. Fix in Settings.";
-                                    Log.e(TAG, errorMessage);
-                                  //  updateCallback.onError(errorMessage);
+                                 //   Log.e(TAG, errorMessage);
+                                    //  updateCallback.onError(errorMessage);
                             }
 
                             updateLocationUI();
@@ -378,6 +375,7 @@ public class ToolytLocationService extends Service {
 
         }
     }
+
     private void openSettings() {
         Intent intent = new Intent();
         intent.setAction(
@@ -399,7 +397,7 @@ public class ToolytLocationService extends Service {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(getApplicationContext(), "Location updates stopped!", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getApplicationContext(), "Location updates stopped!", Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -412,7 +410,7 @@ public class ToolytLocationService extends Service {
 
     private void writeNewLocation(Location mCurrentLocation) {
         try {
-            Log.d("TRACKED_LOC", ": " + mCurrentLocation.getLatitude());
+           // Log.d("TRACKED_LOC", ": " + mCurrentLocation.getLatitude());
             if (mCurrentLocation != null) {
                 FirebaseModelCreator.storeTrackedLocation(getApplicationContext(), mCurrentLocation);
             }

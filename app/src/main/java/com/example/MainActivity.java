@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize ToolytLocation
         ToolytSDKManager.initialize(MainActivity.this);
-        locationTracker = ToolytLocationTracker.getInstance(MainActivity.this);
+        locationTracker = ToolytLocationTracker.getInstance(getApplicationContext());
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAccuracyPriority(AccuracyMode.PRIORITY_HIGH_ACCURACY)
                         .startTracker();*/
 
-                locationTracker.startTracker();
+                locationTracker.setAccuracyPriority(AccuracyMode.PRIORITY_HIGH_ACCURACY).startTracker();
             }
         });
 
